@@ -1,0 +1,23 @@
+CREATE TABLE admins (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50), password VARCHAR(255));
+INSERT INTO admins(username,password) VALUES ('admin', MD5('admin123'));
+CREATE TABLE questions (
+ id INT AUTO_INCREMENT PRIMARY KEY,
+ question TEXT NOT NULL,
+ option_a VARCHAR(255), option_b VARCHAR(255),
+ option_c VARCHAR(255), option_d VARCHAR(255),
+ correct_option CHAR(1) NOT NULL
+);
+CREATE TABLE candidates (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(150), email VARCHAR(150), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE results (id INT AUTO_INCREMENT PRIMARY KEY, candidate_id INT, score INT, total INT, details LONGTEXT, submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+
+CREATE TABLE vouchers (
+ id INT AUTO_INCREMENT PRIMARY KEY,
+ voucher_code VARCHAR(100) UNIQUE NOT NULL,
+ is_active TINYINT(1) DEFAULT 1,
+ used_by_candidate_id INT DEFAULT NULL,
+ used_at TIMESTAMP NULL DEFAULT NULL,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO vouchers (voucher_code, is_active) VALUES ('DEMO-2026', 1);
