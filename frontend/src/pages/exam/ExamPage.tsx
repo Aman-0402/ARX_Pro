@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useApiData } from "@/hooks/useApiData";
 import { api } from "@/lib/api";
 
@@ -34,12 +34,6 @@ export default function ExamPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (questions.error) {
-      navigate("/exam/register", { replace: true });
-    }
-  }, [questions.error, navigate]);
-
   function selectAnswer(questionId: number, option: string) {
     setAnswers((current) => ({ ...current, [questionId]: option }));
   }
@@ -60,8 +54,18 @@ export default function ExamPage() {
     return <div className="p-8 text-center text-gray-500">Loading exam...</div>;
   }
 
-  if (!questions.data) {
-    return <div className="p-8 text-center text-gray-500">Redirecting to registration...</div>;
+  if (questions.error || !questions.data) {
+    return (
+      <div className="p-8 text-center">
+        <p className="text-gray-500 mb-4">
+          {questions.error ?? "Could not load your exam."} If you haven't registered yet, please
+          register first.
+        </p>
+        <Link to="/exam/register" className="text-gold-400 font-semibold">
+          Go to Registration
+        </Link>
+      </div>
+    );
   }
 
   return (
