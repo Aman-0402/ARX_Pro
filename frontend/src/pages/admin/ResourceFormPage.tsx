@@ -22,6 +22,7 @@ export default function ResourceFormPage() {
   const [loadError, setLoadError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     if (!config) return;
@@ -58,6 +59,7 @@ export default function ResourceFormPage() {
     if (!config) return;
     setSubmitting(true);
     setError("");
+    setFieldErrors({});
     try {
       if (isEditing) {
         await api.put(`${config.endpoint}${id}/`, values);
@@ -65,8 +67,16 @@ export default function ResourceFormPage() {
         await api.post(config.endpoint, values);
       }
       navigate(`/admin/${config.key}`);
-    } catch {
-      setError("Failed to save. Check required fields.");
+    } catch (err) {
+      const data =
+        err && typeof err === "object" && "response" in err
+          ? (err as { response?: { data?: unknown } }).response?.data
+          : undefined;
+      if (data && typeof data === "object" && !Array.isArray(data)) {
+        setFieldErrors(data as Record<string, string[]>);
+      } else {
+        setError("Failed to save. Please try again.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -122,6 +132,9 @@ export default function ResourceFormPage() {
                 onChange={(e) => updateField(field.name, e.target.value)}
                 className="border rounded px-3 py-2 w-full"
               />
+            )}
+            {fieldErrors[field.name] && (
+              <p className="text-red-500 text-xs mt-1">{fieldErrors[field.name].join(" ")}</p>
             )}
           </div>
         ))}
