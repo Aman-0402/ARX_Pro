@@ -183,7 +183,7 @@ class SiteContact(models.Model):
     phone = models.CharField(max_length=50)
     email = models.CharField(max_length=150)
     whatsapp = models.CharField(max_length=50, null=True, blank=True)
-    map_embed = models.TextField(null=True, blank=True, db_column="map_embed")
+    map_embed = models.TextField(null=True, blank=True, db_column="mapEmbed")
     updated_at = models.DateTimeField(auto_now=True, db_column="updated_at")
 
     class Meta:
