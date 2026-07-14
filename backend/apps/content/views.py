@@ -35,19 +35,22 @@ from apps.content.serializers import (
 )
 
 
-class ActiveFilteredViewSet(viewsets.ModelViewSet):
+class Force403Mixin:
+    """DRF's default APIView.permission_denied() escalates to 401 whenever
+    any authenticator is configured, regardless of whether the request
+    actually carried credentials. These viewsets want a plain 403 for
+    anonymous writes (session auth for staff logins still works normally
+    via the configured authenticators)."""
+
+    def permission_denied(self, request, message=None, code=None):
+        raise PermissionDenied(detail=message, code=code)
+
+
+class ActiveFilteredViewSet(Force403Mixin, viewsets.ModelViewSet):
     """Non-staff users only see active=True rows; staff see everything."""
 
     active_field = "active"
     permission_classes = [IsStaffOrReadOnly]
-
-    def permission_denied(self, request, message=None, code=None):
-        # DRF's default APIView.permission_denied() escalates to 401
-        # whenever any authenticator is configured, regardless of whether
-        # the request actually carried credentials. We want a plain 403
-        # for anonymous writes (session auth for staff logins still works
-        # normally via the configured authenticators).
-        raise PermissionDenied(detail=message, code=code)
 
     def get_queryset(self):
         queryset = self.queryset
@@ -57,13 +60,10 @@ class ActiveFilteredViewSet(viewsets.ModelViewSet):
         return queryset.filter(**{self.active_field: True})
 
 
-class ContactViewSet(viewsets.ModelViewSet):
+class ContactViewSet(Force403Mixin, viewsets.ModelViewSet):
     queryset = Contact.objects.all().order_by("-created_at")
     serializer_class = ContactSerializer
     permission_classes = [IsStaffOrReadOnly]
-
-    def permission_denied(self, request, message=None, code=None):
-        raise PermissionDenied(detail=message, code=code)
 
     def get_queryset(self):
         if self.request.user and self.request.user.is_authenticated and self.request.user.is_staff:
@@ -71,13 +71,10 @@ class ContactViewSet(viewsets.ModelViewSet):
         return self.queryset.none()
 
 
-class CertificateViewSet(viewsets.ModelViewSet):
+class CertificateViewSet(Force403Mixin, viewsets.ModelViewSet):
     queryset = Certificate.objects.all().order_by("-created_at")
     serializer_class = CertificateSerializer
     permission_classes = [IsStaffOrReadOnly]
-
-    def permission_denied(self, request, message=None, code=None):
-        raise PermissionDenied(detail=message, code=code)
 
 
 class BlogPostViewSet(ActiveFilteredViewSet):
@@ -91,13 +88,10 @@ class TeamMemberViewSet(ActiveFilteredViewSet):
     serializer_class = TeamMemberSerializer
 
 
-class PortfolioItemViewSet(viewsets.ModelViewSet):
+class PortfolioItemViewSet(Force403Mixin, viewsets.ModelViewSet):
     queryset = PortfolioItem.objects.all().order_by("order")
     serializer_class = PortfolioItemSerializer
     permission_classes = [IsStaffOrReadOnly]
-
-    def permission_denied(self, request, message=None, code=None):
-        raise PermissionDenied(detail=message, code=code)
 
 
 class StatViewSet(ActiveFilteredViewSet):
@@ -125,13 +119,10 @@ class PricingPlanViewSet(ActiveFilteredViewSet):
     serializer_class = PricingPlanSerializer
 
 
-class SiteContactViewSet(viewsets.ModelViewSet):
+class SiteContactViewSet(Force403Mixin, viewsets.ModelViewSet):
     queryset = SiteContact.objects.all()
     serializer_class = SiteContactSerializer
     permission_classes = [IsStaffOrReadOnly]
-
-    def permission_denied(self, request, message=None, code=None):
-        raise PermissionDenied(detail=message, code=code)
 
 
 class SocialLinkViewSet(ActiveFilteredViewSet):
