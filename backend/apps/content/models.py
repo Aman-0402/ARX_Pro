@@ -20,8 +20,8 @@ class Certificate(models.Model):
     certificate_id = models.CharField(max_length=100, unique=True, db_column="certificate_id")
     holder_name = models.CharField(max_length=150, db_column="holder_name")
     course_name = models.CharField(max_length=255, db_column="course_name")
-    issue_date = models.DateField(db_column="issue_date")
-    expiry_date = models.DateField(null=True, blank=True, db_column="expiry_date")
+    issue_date = models.DateTimeField(db_column="issue_date")
+    expiry_date = models.DateTimeField(null=True, blank=True, db_column="expiry_date")
     is_valid = models.BooleanField(default=True, db_column="is_valid")
     created_at = models.DateTimeField(auto_now_add=True, db_column="created_at")
 
