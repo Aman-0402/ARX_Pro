@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,9 +11,11 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  if (user?.is_staff) {
-    navigate("/admin", { replace: true });
-  }
+  useEffect(() => {
+    if (user?.is_staff) {
+      navigate("/admin", { replace: true });
+    }
+  }, [user, navigate]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
