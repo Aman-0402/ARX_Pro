@@ -133,12 +133,19 @@ export default function ResourceFormPage() {
                 className="border rounded px-3 py-2 w-full"
               />
             )}
-            {fieldErrors[field.name] && (
+            {Array.isArray(fieldErrors[field.name]) && (
               <p className="text-red-500 text-xs mt-1">{fieldErrors[field.name].join(" ")}</p>
             )}
           </div>
         ))}
 
+        {Object.entries(fieldErrors)
+          .filter(([key]) => !config.fields.some((f) => f.name === key))
+          .map(([key, messages]) => (
+            <p key={key} className="text-red-500 text-sm">
+              {Array.isArray(messages) ? messages.join(" ") : String(messages)}
+            </p>
+          ))}
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <button type="submit" disabled={submitting} className="btn-primary">
           {submitting ? "Saving..." : "Save"}
