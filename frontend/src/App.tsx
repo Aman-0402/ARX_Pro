@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import RequireAuth from "@/components/RequireAuth";
+import Layout from "@/components/layout/Layout";
 import HomePage from "@/pages/HomePage";
 import AboutPage from "@/pages/AboutPage";
 import ServicesPage from "@/pages/ServicesPage";
@@ -20,25 +21,27 @@ import NotFoundPage from "@/pages/NotFoundPage";
 export default function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/portfolio" element={<PortfolioPage />} />
-        <Route path="/team" element={<TeamPage />} />
-        <Route path="/blog" element={<BlogListPage />} />
-        <Route path="/blog/:slug" element={<BlogPostPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/verify" element={<VerifyPage />} />
-        <Route path="/exam/register" element={<ExamRegisterPage />} />
-        <Route path="/exam" element={<ExamPage />} />
-        <Route path="/exam/result" element={<ExamResultPage />} />
-        <Route path="/admin/login" element={<AdminLoginPage />} />
-        <Route element={<RequireAuth />}>
-          <Route path="/admin" element={<AdminDashboardPage />} />
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/team" element={<TeamPage />} />
+          <Route path="/blog" element={<BlogListPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/verify" element={<VerifyPage />} />
+          <Route path="/exam/register" element={<ExamRegisterPage />} />
+          <Route path="/exam" element={<ExamPage />} />
+          <Route path="/exam/result" element={<ExamResultPage />} />
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/admin" element={<AdminDashboardPage />} />
+          </Route>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Layout>
     </AuthProvider>
   );
 }
