@@ -181,6 +181,38 @@ export const ADMIN_RESOURCES: ResourceConfig[] = [
       { name: "active", label: "Active", type: "checkbox" },
     ],
   },
+  {
+    key: "exam-questions",
+    label: "Exam Questions",
+    endpoint: "/api/exam/admin/questions/",
+    columns: ["question", "correct_option"],
+    fields: [
+      { name: "question", label: "Question", type: "textarea", required: true },
+      { name: "option_a", label: "Option A", type: "text", required: true },
+      { name: "option_b", label: "Option B", type: "text", required: true },
+      { name: "option_c", label: "Option C", type: "text", required: true },
+      { name: "option_d", label: "Option D", type: "text", required: true },
+      { name: "correct_option", label: "Correct Option (A/B/C/D)", type: "text", required: true },
+    ],
+  },
+  {
+    key: "exam-vouchers",
+    label: "Exam Vouchers",
+    endpoint: "/api/exam/admin/vouchers/",
+    columns: ["voucher_code", "is_active", "used_at"],
+    fields: [
+      { name: "voucher_code", label: "Voucher Code", type: "text", required: true },
+      { name: "is_active", label: "Active", type: "checkbox" },
+    ],
+  },
+  {
+    key: "exam-results",
+    label: "Exam Results",
+    endpoint: "/api/exam/admin/results/",
+    columns: ["candidate", "score", "total", "passed", "submitted_at"],
+    fields: [],
+    readOnly: true,
+  },
 ];
 
 export function getResourceConfig(key: string): ResourceConfig | undefined {
