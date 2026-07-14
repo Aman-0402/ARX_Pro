@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Website ────────────────────────────────────────────────────────────────
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(150)
+  email     String   @db.VarChar(150)
+  phone     String?  @db.VarChar(20)
+  subject   String   @db.VarChar(255)
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("contacts")
+}
+
+model Certificate {
+  id            Int       @id @default(autoincrement())
+  certificateId String    @unique @map("certificate_id") @db.VarChar(100)
+  holderName    String    @map("holder_name") @db.VarChar(150)
+  courseName    String    @map("course_name") @db.VarChar(255)
+  issueDate     DateTime  @map("issue_date")
+  expiryDate    DateTime? @map("expiry_date")
+  isValid       Boolean   @default(true) @map("is_valid")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("certificates")
+}
+
+model BlogPost {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique @db.VarChar(255)
+  title       String    @db.VarChar(500)
+  excerpt     String    @db.Text
+  content     String    @db.LongText
+  coverImage  String?   @map("cover_image") @db.VarChar(500)
+  category    String    @db.VarChar(100)
+  tags        String?   @db.VarChar(500)
+  author      String    @db.VarChar(150)
+  published   Boolean   @default(false)
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("blog_posts")
+}
+
+model TeamMember {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(150)
+  role      String   @db.VarChar(150)
+  bio       String?  @db.Text
+  photo     String?  @db.VarChar(500)
+  linkedin  String?  @db.VarChar(500)
+  twitter   String?  @db.VarChar(500)
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("team_members")
+}
+
+model PortfolioItem {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  category    String   @db.VarChar(100)
+  description String   @db.Text
+  content     String?  @db.LongText
+  image       String?  @db.VarChar(500)
+  tags        String?  @db.VarChar(500)
+  clientName  String?  @map("client_name") @db.VarChar(255)
+  liveUrl     String?  @map("live_url") @db.VarChar(500)
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("portfolio_items")
+}
+
+model Stat {
+  id        Int      @id @default(autoincrement())
+  icon      String   @default("users") @db.VarChar(100)
+  target    Int
+  suffix    String   @db.VarChar(20)
+  label     String   @db.VarChar(150)
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("stats")
+}
+
+model Client {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  logo      String?  @db.VarChar(500)
+  website   String?  @db.VarChar(500)
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("clients")
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(150)
+  company   String   @db.VarChar(255)
+  role      String?  @db.VarChar(150)
+  text      String   @db.Text
+  stars     Float    @default(5)
+  avatar    String?  @db.VarChar(500)
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("testimonials")
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  icon        String   @default("briefcase") @db.VarChar(100)
+  image       String?  @db.VarChar(500)
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("services")
+}
+
+model PricingPlan {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(150)
+  tagline      String   @db.VarChar(255)
+  price        String   @db.VarChar(50)
+  period       String   @db.VarChar(50)
+  badge        String?  @db.VarChar(100)
+  badgeVariant String   @default("gold") @map("badge_variant") @db.VarChar(20)
+  highlight    Boolean  @default(false)
+  features     String   @db.Text
+  buttonLabel  String   @default("Get Quote") @map("button_label") @db.VarChar(100)
+  order        Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("pricing_plans")
+}
+
+model SiteContact {
+  id        Int      @id @default(autoincrement())
+  address   String   @db.Text
+  phone     String   @db.VarChar(50)
+  email     String   @db.VarChar(150)
+  whatsapp  String?  @db.VarChar(50)
+  mapEmbed  String?  @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_contact")
+}
+
+model SocialLink {
+  id        Int      @id @default(autoincrement())
+  platform  String   @db.VarChar(50)
+  label     String   @db.VarChar(100)
+  url       String   @db.VarChar(500)
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("social_links")
+}
+
+// ─── Exam Module ─────────────────────────────────────────────────────────────
+
+model ExamAdmin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("exam_admins")
+}
+
+model ExamQuestion {
+  id            Int    @id @default(autoincrement())
+  question      String @db.Text
+  optionA       String @map("option_a") @db.VarChar(255)
+  optionB       String @map("option_b") @db.VarChar(255)
+  optionC       String @map("option_c") @db.VarChar(255)
+  optionD       String @map("option_d") @db.VarChar(255)
+  correctOption String @map("correct_option") @db.Char(1)
+
+  @@map("exam_questions")
+}
+
+model ExamCandidate {
+  id        Int          @id @default(autoincrement())
+  name      String       @db.VarChar(150)
+  email     String       @db.VarChar(150)
+  createdAt DateTime     @default(now()) @map("created_at")
+  results   ExamResult[]
+
+  @@map("exam_candidates")
+}
+
+model ExamResult {
+  id          Int           @id @default(autoincrement())
+  candidateId Int           @map("candidate_id")
+  candidate   ExamCandidate @relation(fields: [candidateId], references: [id])
+  score       Int
+  total       Int
+  passed      Boolean       @default(false)
+  details     String?       @db.LongText
+  submittedAt DateTime      @default(now()) @map("submitted_at")
+
+  @@map("exam_results")
+}
+
+model ExamVoucher {
+  id                Int       @id @default(autoincrement())
+  voucherCode       String    @unique @map("voucher_code") @db.VarChar(100)
+  isActive          Boolean   @default(true) @map("is_active")
+  usedByCandidateId Int?      @map("used_by_candidate_id")
+  usedAt            DateTime? @map("used_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  @@map("exam_vouchers")
+}
