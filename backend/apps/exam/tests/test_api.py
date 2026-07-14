@@ -150,3 +150,56 @@ class ExamCandidateFlowTest(APITestCase):
     def test_result_endpoint_requires_registration(self):
         response = self.client.get(reverse("exam:result"))
         self.assertEqual(response.status_code, 403)
+
+    def test_submit_at_exact_pass_mark_boundary_passes(self):
+        questions = _make_questions(5)
+        self.client.post(
+            reverse("exam:register"),
+            {"name": "Jane", "email": "jane@example.com", "voucher_code": "VOUCH-1"},
+            format="json",
+        )
+        self.client.get(reverse("exam:questions"))
+
+        # 3/5 = 60% exactly - should pass
+        answers = {
+            str(questions[0].id): "A",
+            str(questions[1].id): "A",
+            str(questions[2].id): "A",
+        }
+        response = self.client.post(
+            reverse("exam:submit"), {"answers": answers}, format="json"
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["score"], 3)
+        self.assertEqual(response.data["total"], 5)
+        self.assertTrue(response.data["passed"])
+
+    def test_submit_just_below_pass_mark_boundary_fails(self):
+        questions = _make_questions(5)
+        self.client.post(
+            reverse("exam:register"),
+            {"name": "Jane", "email": "jane@example.com", "voucher_code": "VOUCH-1"},
+            format="json",
+        )
+        self.client.get(reverse("exam:questions"))
+
+        # 2/5 = 40% - should fail
+        answers = {
+            str(questions[0].id): "A",
+            str(questions[1].id): "A",
+        }
+        response = self.client.post(
+            reverse("exam:submit"), {"answers": answers}, format="json"
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["score"], 2)
+        self.assertFalse(response.data["passed"])
+
+    def test_register_requires_all_fields(self):
+        response = self.client.post(
+            reverse("exam:register"),
+            {"name": "Jane", "email": "", "voucher_code": "VOUCH-1"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(ExamCandidate.objects.count(), 0)
