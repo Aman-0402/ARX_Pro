@@ -17,8 +17,12 @@ export default function ResourceListPage() {
   async function handleDelete(id: number) {
     if (!config) return;
     if (!window.confirm("Delete this item? This cannot be undone.")) return;
-    await api.delete(`${config.endpoint}${id}/`);
-    navigate(0);
+    try {
+      await api.delete(`${config.endpoint}${id}/`);
+      navigate(0);
+    } catch {
+      window.alert("Failed to delete this item. Please try again.");
+    }
   }
 
   return (

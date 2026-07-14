@@ -19,6 +19,7 @@ export default function ResourceFormPage() {
 
   const [values, setValues] = useState<FormValues>({});
   const [loading, setLoading] = useState(isEditing);
+  const [loadError, setLoadError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -32,14 +33,21 @@ export default function ResourceFormPage() {
       setValues(initial);
       return;
     }
-    api.get<FormValues>(`${config.endpoint}${id}/`).then((response) => {
-      setValues(response.data);
-      setLoading(false);
-    });
+    api
+      .get<FormValues>(`${config.endpoint}${id}/`)
+      .then((response) => {
+        setValues(response.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoadError("Failed to load this item. It may have been deleted.");
+        setLoading(false);
+      });
   }, [config, id, isEditing]);
 
   if (!config) return <div className="p-8">Unknown resource.</div>;
   if (loading) return <div className="p-8">Loading...</div>;
+  if (loadError) return <div className="p-8 text-red-500">{loadError}</div>;
 
   function updateField(name: string, value: string | number | boolean) {
     setValues((current) => ({ ...current, [name]: value }));
