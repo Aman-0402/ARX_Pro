@@ -2,6 +2,7 @@ import json
 
 from django.utils import timezone
 from rest_framework import status, viewsets
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -124,16 +125,19 @@ class ResultView(APIView):
 class ExamQuestionAdminViewSet(viewsets.ModelViewSet):
     queryset = ExamQuestion.objects.all()
     serializer_class = ExamQuestionAdminSerializer
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAdminUser]
 
 
 class ExamVoucherAdminViewSet(viewsets.ModelViewSet):
     queryset = ExamVoucher.objects.all().order_by("-created_at")
     serializer_class = ExamVoucherSerializer
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAdminUser]
 
 
 class ExamResultAdminViewSet(viewsets.ModelViewSet):
     queryset = ExamResult.objects.all().order_by("-submitted_at")
     serializer_class = ExamResultSerializer
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAdminUser]

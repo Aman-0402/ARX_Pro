@@ -203,3 +203,38 @@ class ExamCandidateFlowTest(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(ExamCandidate.objects.count(), 0)
+
+
+class ExamAdminApiTest(APITestCase):
+    def setUp(self):
+        self.staff = User.objects.create_user(
+            username="staff", password="Sup3rSecret!", is_staff=True
+        )
+        self.question = ExamQuestion.objects.create(
+            question="2+2?", option_a="3", option_b="4", option_c="5", option_d="6",
+            correct_option="B",
+        )
+
+    def test_anonymous_cannot_list_admin_questions(self):
+        response = self.client.get("/api/exam/admin/questions/")
+        self.assertEqual(response.status_code, 403)
+
+    def test_staff_can_list_admin_questions_with_correct_option_visible(self):
+        self.client.login(username="staff", password="Sup3rSecret!")
+        response = self.client.get("/api/exam/admin/questions/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("correct_option", response.data[0])
+
+    def test_staff_can_create_voucher(self):
+        self.client.login(username="staff", password="Sup3rSecret!")
+        response = self.client.post(
+            "/api/exam/admin/vouchers/", {"voucher_code": "NEWCODE"}, format="json"
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(ExamVoucher.objects.filter(voucher_code="NEWCODE").exists())
+
+    def test_anonymous_cannot_create_voucher(self):
+        response = self.client.post(
+            "/api/exam/admin/vouchers/", {"voucher_code": "NEWCODE"}, format="json"
+        )
+        self.assertEqual(response.status_code, 403)
