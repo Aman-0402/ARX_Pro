@@ -16,6 +16,9 @@ import ExamPage from "@/pages/exam/ExamPage";
 import ExamResultPage from "@/pages/exam/ExamResultPage";
 import AdminLoginPage from "@/pages/admin/AdminLoginPage";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage";
+import ResourceListPage from "@/pages/admin/ResourceListPage";
+import ResourceFormPage from "@/pages/admin/ResourceFormPage";
+import SettingsPage from "@/pages/admin/SettingsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
 export default function App() {
@@ -37,7 +40,13 @@ export default function App() {
           <Route path="/exam/result" element={<ExamResultPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route element={<RequireAuth />}>
-            <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin" element={<AdminDashboardPage />}>
+              <Route index element={<ResourceListPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path=":resource" element={<ResourceListPage />} />
+              <Route path=":resource/new" element={<ResourceFormPage />} />
+              <Route path=":resource/:id" element={<ResourceFormPage />} />
+            </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
