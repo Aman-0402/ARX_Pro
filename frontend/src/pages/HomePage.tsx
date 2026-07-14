@@ -111,6 +111,10 @@ export default function HomePage() {
 
       <section className="py-16 bg-navy-900">
         <div className="container mx-auto px-4">
+          {stats.loading && (
+            <p className="text-center text-gray-400">Loading stats...</p>
+          )}
+          {stats.error && <p className="text-center text-red-400">{stats.error}</p>}
           {stats.data && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               {stats.data.map((stat) => (
@@ -135,6 +139,12 @@ export default function HomePage() {
             </p>
             <h2 className="section-title">What Our Clients Say</h2>
           </div>
+          {testimonials.loading && (
+            <p className="text-center text-gray-500">Loading testimonials...</p>
+          )}
+          {testimonials.error && (
+            <p className="text-center text-red-500">{testimonials.error}</p>
+          )}
           {testimonials.data && (
             <div className="grid md:grid-cols-3 gap-8">
               {testimonials.data.map((testimonial) => (
