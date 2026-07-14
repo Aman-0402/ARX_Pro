@@ -27,6 +27,23 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+const SESSION_EXEMPT_PATHS = ["/api/auth/login/", "/api/auth/me/", "/api/auth/csrf/"];
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    const url: string = error?.config?.url ?? "";
+    const isExempt = SESSION_EXEMPT_PATHS.some((path) => url.includes(path));
+
+    if (status === 401 && !isExempt && window.location.pathname.startsWith("/admin")) {
+      window.location.href = "/admin/login";
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 export async function ensureCsrfCookie(): Promise<void> {
   await api.get("/api/auth/csrf/");
 }
