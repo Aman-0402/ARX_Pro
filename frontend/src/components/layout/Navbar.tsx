@@ -20,8 +20,14 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link to="/" className="text-lg font-bold">
-          ARX Infotech
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/images/logo.png" alt="ARX Infotech" className="h-9 w-auto" />
+          <span className="hidden sm:block leading-tight">
+            <span className="block font-bold text-navy-900">ARX INFOTECH</span>
+            <span className="block text-[10px] text-gray-500 tracking-wide">
+              AI Powered Smart Innovation Company
+            </span>
+          </span>
         </Link>
 
         <button
@@ -47,6 +53,13 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+
+        <Link
+          to="/verify"
+          className="hidden md:inline-block bg-gold-400 text-navy-900 text-sm font-bold px-4 py-2 rounded hover:bg-gold-500"
+        >
+          Verify
+        </Link>
       </div>
 
       {menuOpen && (
@@ -58,6 +71,11 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          <li>
+            <Link to="/verify" onClick={() => setMenuOpen(false)}>
+              Verify
+            </Link>
+          </li>
         </ul>
       )}
     </nav>
