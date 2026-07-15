@@ -38,8 +38,18 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="relative min-h-[80vh] flex items-center bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900">
-        <div className="container mx-auto px-4 py-24">
+      <section className="relative min-h-[80vh] flex items-center bg-navy-900 overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
+        >
+          <source src="/video/hero.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-900/90 via-navy-900/60 to-navy-900/20" />
+        <div className="relative z-10 container mx-auto px-4 py-24">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-gold-400/10 border border-gold-400/30 text-gold-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
               <span className="w-2 h-2 bg-gold-400 rounded-full" />
