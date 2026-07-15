@@ -76,6 +76,11 @@ class SubmitView(APIView):
         candidate_id = request.session["exam_candidate_id"]
         presented_ids = request.session.get("exam_question_ids", [])
         answers = request.data.get("answers", {})
+        if not isinstance(answers, dict):
+            return Response(
+                {"error": "answers must be an object mapping question id to selected option"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         questions = {q.id: q for q in ExamQuestion.objects.filter(id__in=presented_ids)}
 

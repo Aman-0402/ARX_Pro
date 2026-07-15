@@ -81,6 +81,20 @@ class ExamCandidateFlowTest(APITestCase):
         response = self.client.post(reverse("exam:submit"), {"answers": {}}, format="json")
         self.assertEqual(response.status_code, 403)
 
+    def test_submit_rejects_non_dict_answers(self):
+        _make_questions(2)
+        self.client.post(
+            reverse("exam:register"),
+            {"name": "Jane", "email": "jane@example.com", "voucher_code": "VOUCH-1"},
+            format="json",
+        )
+        self.client.get(reverse("exam:questions"))
+
+        response = self.client.post(
+            reverse("exam:submit"), {"answers": ["A", "B"]}, format="json"
+        )
+        self.assertEqual(response.status_code, 400)
+
     def test_submit_scores_correctly_and_creates_result(self):
         questions = _make_questions(4)
         self.client.post(
