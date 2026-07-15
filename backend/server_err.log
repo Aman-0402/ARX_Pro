@@ -1,0 +1,7 @@
+Watching for file changes with StatReloader
+Not Found: /api/csrf/
+[15/Jul/2026 09:47:09] "GET /api/csrf/ HTTP/1.1" 404 2434
+[15/Jul/2026 09:47:10] "POST /api/exam/register/ HTTP/1.1" 201 101
+[15/Jul/2026 09:47:10] "GET /api/exam/questions/ HTTP/1.1" 200 1937
+Bad Request: /api/exam/submit/
+[15/Jul/2026 09:47:10] "POST /api/exam/submit/ HTTP/1.1" 400 76
