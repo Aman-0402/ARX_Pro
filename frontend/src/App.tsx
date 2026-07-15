@@ -20,6 +20,7 @@ import ResourceListPage from "@/pages/admin/ResourceListPage";
 import ResourceFormPage from "@/pages/admin/ResourceFormPage";
 import SettingsPage from "@/pages/admin/SettingsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import ChatWidget from "@/components/ChatWidget";
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Layout>
+      <ChatWidget />
     </AuthProvider>
   );
 }
